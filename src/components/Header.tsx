@@ -1,34 +1,36 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Globe, User, LogIn } from "lucide-react";
 import margdarshakLogo from "@/assets/margdarshak-logo.jpg";
+import { toast } from "sonner";
 
 const Header = () => {
   const [language, setLanguage] = useState("EN");
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<any>(null);
+  const navigate = useNavigate();
 
-  const handleLogin = (email: string, password: string) => {
-    // Sample credentials
-    if (email === "demo@margdarshak.in" && password === "demo123") {
-      setUser({ name: "Demo User", email });
-      setIsLoggedIn(true);
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleLogout = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      toast.error("Error signing out");
+    } else {
+      toast.success("Signed out successfully");
+      setUser(null);
     }
-  };
-
-  const handleSignup = (name: string, email: string, password: string) => {
-    setUser({ name, email });
-    setIsLoggedIn(true);
   };
 
   return (
@@ -76,88 +78,28 @@ const Header = () => {
           </Button>
 
           {/* Auth Section */}
-          {isLoggedIn ? (
+          {user ? (
             <div className="flex items-center space-x-2">
               <div className="h-8 w-8 rounded-full bg-gradient-primary flex items-center justify-center">
                 <User className="h-4 w-4 text-white" />
               </div>
-              <span className="text-sm font-medium">{user?.name}</span>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => {
-                  setIsLoggedIn(false);
-                  setUser(null);
-                }}
-              >
+              <span className="text-sm font-medium">
+                {user.user_metadata?.full_name || user.email}
+              </span>
+              <Button variant="ghost" size="sm" onClick={handleLogout}>
                 Logout
               </Button>
             </div>
           ) : (
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button variant="hero" size="sm" className="flex items-center space-x-2">
-                  <LogIn className="h-4 w-4" />
-                  <span>Login</span>
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
-                  <DialogTitle className="text-center">Welcome to Margdarshak</DialogTitle>
-                </DialogHeader>
-                <Tabs defaultValue="login" className="w-full">
-                  <TabsList className="grid w-full grid-cols-2">
-                    <TabsTrigger value="login">Login</TabsTrigger>
-                    <TabsTrigger value="signup">Sign Up</TabsTrigger>
-                  </TabsList>
-                  
-                  <TabsContent value="login" className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="email">Email</Label>
-                      <Input id="email" type="email" placeholder="demo@margdarshak.in" />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="password">Password</Label>
-                      <Input id="password" type="password" placeholder="demo123" />
-                    </div>
-                    <div className="text-sm text-muted-foreground">
-                      <p>Demo credentials:</p>
-                      <p>Email: demo@margdarshak.in</p>
-                      <p>Password: demo123</p>
-                    </div>
-                    <Button 
-                      className="w-full" 
-                      variant="hero"
-                      onClick={() => handleLogin("demo@margdarshak.in", "demo123")}
-                    >
-                      Login
-                    </Button>
-                  </TabsContent>
-                  
-                  <TabsContent value="signup" className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="name">Full Name</Label>
-                      <Input id="name" placeholder="Your full name" />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="signup-email">Email</Label>
-                      <Input id="signup-email" type="email" placeholder="your.email@example.com" />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="signup-password">Password</Label>
-                      <Input id="signup-password" type="password" placeholder="Create a password" />
-                    </div>
-                    <Button 
-                      className="w-full" 
-                      variant="hero"
-                      onClick={() => handleSignup("New User", "new@margdarshak.in", "newpass")}
-                    >
-                      Create Account
-                    </Button>
-                  </TabsContent>
-                </Tabs>
-              </DialogContent>
-            </Dialog>
+            <Button 
+              variant="hero" 
+              size="sm" 
+              className="flex items-center space-x-2"
+              onClick={() => navigate("/auth")}
+            >
+              <LogIn className="h-4 w-4" />
+              <span>Login</span>
+            </Button>
           )}
         </div>
       </div>

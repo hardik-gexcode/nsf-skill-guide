@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -13,6 +14,8 @@ import {
 } from "lucide-react";
 
 const HeroSection = () => {
+  const navigate = useNavigate();
+  
   return (
     <section id="home" className="min-h-screen bg-gradient-hero relative overflow-hidden">
       {/* Background Elements */}
@@ -42,11 +45,20 @@ const HeroSection = () => {
             </div>
 
             <div className="flex flex-wrap gap-4">
-              <Button variant="hero" size="lg" className="group">
+              <Button 
+                variant="hero" 
+                size="lg" 
+                className="group"
+                onClick={() => navigate("/auth")}
+              >
                 Start Your Journey
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Button>
-              <Button variant="outline" size="lg">
+              <Button 
+                variant="outline" 
+                size="lg"
+                onClick={() => document.getElementById('skills')?.scrollIntoView({ behavior: 'smooth' })}
+              >
                 Explore Features
               </Button>
             </div>
