@@ -14,16 +14,216 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      courses: {
+        Row: {
+          created_at: string
+          description: string | null
+          duration_hours: number | null
+          id: string
+          image_url: string | null
+          learning_path_id: string | null
+          price: number | null
+          provider: string | null
+          rating: number | null
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          duration_hours?: number | null
+          id?: string
+          image_url?: string | null
+          learning_path_id?: string | null
+          price?: number | null
+          provider?: string | null
+          rating?: number | null
+          title: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          duration_hours?: number | null
+          id?: string
+          image_url?: string | null
+          learning_path_id?: string | null
+          price?: number | null
+          provider?: string | null
+          rating?: number | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "courses_learning_path_id_fkey"
+            columns: ["learning_path_id"]
+            isOneToOne: false
+            referencedRelation: "learning_paths"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      learning_paths: {
+        Row: {
+          category: string
+          created_at: string
+          description: string | null
+          difficulty: string
+          duration_weeks: number | null
+          icon: string | null
+          id: string
+          title: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          description?: string | null
+          difficulty: string
+          duration_weeks?: number | null
+          icon?: string | null
+          id?: string
+          title: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          difficulty?: string
+          duration_weeks?: number | null
+          icon?: string | null
+          id?: string
+          title?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          bio: string | null
+          created_at: string
+          full_name: string | null
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string
+          full_name?: string | null
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_progress: {
+        Row: {
+          completed: boolean
+          completed_at: string | null
+          course_id: string
+          id: string
+          progress: number
+          started_at: string
+          user_id: string
+        }
+        Insert: {
+          completed?: boolean
+          completed_at?: string | null
+          course_id: string
+          id?: string
+          progress?: number
+          started_at?: string
+          user_id: string
+        }
+        Update: {
+          completed?: boolean
+          completed_at?: string | null
+          course_id?: string
+          id?: string
+          progress?: number
+          started_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_progress_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_saved_courses: {
+        Row: {
+          course_id: string
+          id: string
+          saved_at: string
+          user_id: string
+        }
+        Insert: {
+          course_id: string
+          id?: string
+          saved_at?: string
+          user_id: string
+        }
+        Update: {
+          course_id?: string
+          id?: string
+          saved_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_saved_courses_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +350,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+    },
   },
 } as const
