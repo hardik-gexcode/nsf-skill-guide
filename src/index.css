@@ -1,0 +1,211 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Margdarshak Design System - Inspired by logo's vibrant gradients */
+
+@layer base {
+  :root {
+    /* Base colors */
+    --background: 0 0% 98%;
+    --foreground: 220 15% 15%;
+
+    /* Card system */
+    --card: 0 0% 100%;
+    --card-foreground: 220 15% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 15% 15%;
+
+    /* Brand colors inspired by Margdarshak logo */
+    --primary: 158 65% 45%; /* Teal-green from logo */
+    --primary-foreground: 0 0% 100%;
+    
+    --secondary: 75 60% 55%; /* Lime green from logo */
+    --secondary-foreground: 220 15% 15%;
+    
+    --accent: 25 85% 60%; /* Orange from logo */
+    --accent-foreground: 0 0% 100%;
+
+    /* Supporting colors */
+    --muted: 210 20% 96%;
+    --muted-foreground: 215 16% 47%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 158 65% 45%;
+
+    --radius: 0.75rem;
+
+    /* Custom Margdarshak gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(158 80% 35%), hsl(25 95% 50%));
+    --gradient-secondary: linear-gradient(135deg, hsl(75 60% 55%), hsl(25 85% 60%));
+    --gradient-hero: linear-gradient(135deg, hsl(158 65% 45%) 0%, hsl(75 60% 55%) 50%, hsl(25 85% 60%) 100%);
+    --gradient-subtle: linear-gradient(135deg, hsl(158 65% 98%), hsl(75 60% 98%));
+    
+    /* Enhanced text gradient for better visibility */
+    --gradient-text-enhanced: linear-gradient(135deg, hsl(158 90% 25%), hsl(25 100% 45%), hsl(75 80% 40%));
+
+    /* Shadows with brand colors */
+    --shadow-glow: 0 20px 40px -10px hsl(158 65% 45% / 0.2);
+    --shadow-accent: 0 10px 30px -10px hsl(25 85% 60% / 0.3);
+    
+    /* Animations */
+    --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    /* Success color */
+    --success: 142 76% 36%;
+    --success-foreground: 0 0% 100%;
+
+    /* Info color */
+    --info: 217 91% 60%;
+    --info-foreground: 0 0% 100%;
+
+    /* Warning color */
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+  }
+
+  .dark {
+    --background: 220 15% 8%;
+    --foreground: 210 40% 95%;
+
+    --card: 220 15% 10%;
+    --card-foreground: 210 40% 95%;
+
+    --popover: 220 15% 10%;
+    --popover-foreground: 210 40% 95%;
+
+    --primary: 158 65% 50%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 75 40% 45%;
+    --secondary-foreground: 0 0% 100%;
+
+    --accent: 25 75% 55%;
+    --accent-foreground: 0 0% 100%;
+
+    --muted: 220 15% 15%;
+    --muted-foreground: 215 20% 65%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 15% 20%;
+    --input: 220 15% 20%;
+    --ring: 158 65% 50%;
+
+    --success: 142 76% 40%;
+    --info: 217 91% 65%;
+    --warning: 38 92% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+    scroll-behavior: smooth;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-muted;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--gradient-primary);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--gradient-secondary);
+  }
+}
+
+@layer components {
+  /* Hero gradient backgrounds */
+  .gradient-hero {
+    background: var(--gradient-hero);
+  }
+
+  .gradient-primary {
+    background: var(--gradient-primary);
+  }
+
+  .gradient-secondary {
+    background: var(--gradient-secondary);
+  }
+
+  .gradient-subtle {
+    background: var(--gradient-subtle);
+  }
+
+  /* Glow effects */
+  .glow-primary {
+    box-shadow: var(--shadow-glow);
+  }
+
+  .glow-accent {
+    box-shadow: var(--shadow-accent);
+  }
+
+  /* Animations */
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-pulse-slow {
+    animation: pulse 3s ease-in-out infinite;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.8s ease-out;
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 1s ease-out;
+  }
+
+  /* Enhanced text gradient with shadow for better visibility */
+  .text-gradient-enhanced {
+    background: var(--gradient-text-enhanced);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 30px hsl(158 80% 35% / 0.5);
+    filter: drop-shadow(0 2px 4px hsl(0 0% 0% / 0.3));
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
