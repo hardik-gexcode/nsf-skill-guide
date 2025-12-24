@@ -1,74 +1,80 @@
-# 🚀 MARGDARSHAK
+🚀 MARGDARSHAK
 
 **AI-powered personalized vocational and career guidance platform**  
 Aligned with **NCVET**, **NSQF**, and **real-time labour market intelligence**.
 
-MARGDARSHAK helps learners at every stage — beginners, mid-career professionals, and working experts — discover the right skill pathways, stay relevant in the job market, and build future-ready careers using AI.
+MARGDARSHAK is built to help learners across India make informed career decisions, discover relevant vocational pathways, and continuously upskill according to evolving industry needs using AI and Microsoft technologies.
 
 ---
 
 ## 🌍 Problem Statement
 
-India’s skilling ecosystem offers numerous vocational and training programs, but learners often struggle to:
-- Choose the right career path
-- Understand industry-relevant skills
-- Align learning with real job opportunities
-- Keep up with rapidly changing market demands
+India’s skilling ecosystem offers a wide range of vocational qualifications and training programs. However, learners often face challenges such as:
 
-This leads to **skill mismatches**, **unemployment**, and **underutilized training opportunities**.
+- Difficulty choosing the right career path
+- Lack of personalized guidance
+- Poor alignment between skills and industry demand
+- Rapidly changing job market requirements
+- Limited awareness of NSQF- and NCVET-aligned opportunities
+
+These gaps result in skill mismatches, unemployment, and underutilization of training resources.
 
 ---
 
 ## 💡 Our Solution
 
-MARGDARSHAK is an **AI-powered career navigator** that:
+MARGDARSHAK acts as an **AI-powered career navigator** that:
 
 - Analyzes learner profiles (education, skills, interests, goals)
 - Maps users to **NSQF-aligned vocational pathways**
-- Recommends **government-backed courses** (NCVET, SWAYAM, NPTEL)
-- Tracks progress and skill gaps
+- Recommends government-backed courses (NCVET, SWAYAM, NPTEL)
 - Provides real-time labour market insights
-- Supports multilingual access (English & Hindi)
+- Tracks skill progress and identifies gaps
+- Continuously updates recommendations based on market trends
+
+The platform is designed to be **inclusive, scalable, and future-ready**.
 
 ---
 
-## 👥 User Types Supported
+## 👥 Target Users
 
 ### 1️⃣ Beginners
 - Interest discovery surveys
-- Career exploration paths
-- Foundational skill guidance
+- Career exploration guidance
+- Foundational skill roadmaps
 
 ### 2️⃣ Mid-Level Learners
 - Skill enhancement recommendations
-- Career transition planning
-- Certifications and upskilling
+- Career transition support
+- Certification and upskilling pathways
 
 ### 3️⃣ Working Professionals
-- Market trend analysis
-- Advanced skill recommendations
-- Continuous learning to avoid skill obsolescence
+- Continuous learning recommendations
+- Market trend and salary insights
+- Advanced and future-skill development
 
 ---
 
 ## 🧠 Key Features
 
 - 🔍 AI-based learner profiling
-- 🧭 Personalized career roadmaps
-- 📊 Labour market analytics (demand, salary, trends)
-- 🎓 NSQF & NCVET-aligned vocational courses
-- 🤖 Integrated AI chatbot for guidance
-- 🧪 **Agni Lab** – experimental tools & challenges
-- 🔥 **Agni Flame Meter** – daily/weekly skill challenges
-- 🏅 Gamified progress, badges & streaks
-- 🌐 Scalable architecture (millions of users)
+- 🧭 Personalized career and vocational roadmaps
+- 📊 Labour market analytics (demand, salary, growth trends)
+- 🎓 NSQF & NCVET-aligned course recommendations
+- 🤖 AI chatbot for career and skill guidance
+- 🧪 **Agni Lab** – experimental tools and open challenges
+- 🔥 **Agni Flame Meter** – daily and weekly skill challenges
+- 🏅 Gamified progress tracking, badges, and streaks
+- 🌐 Multilingual support (English & Hindi – expandable)
+- 📈 Scalable architecture for millions of learners
 
 ---
 
-## 🛠️ Tech Stack (Imagine Cup Aligned)
+## 🛠️ Technology Stack (Imagine Cup Aligned)
 
 ### Frontend
-- React + TypeScript
+- React
+- TypeScript
 - Vite
 - Tailwind CSS
 - ShadCN UI
@@ -90,7 +96,8 @@ MARGDARSHAK is an **AI-powered career navigator** that:
 ```txt
 nsf-skill-guide/
 ├── public/
-│   └── favicon.png
+│   ├── favicon.png
+│   └── robots.txt
 ├── src/
 │   ├── components/
 │   ├── pages/
@@ -101,3 +108,63 @@ nsf-skill-guide/
 ├── index.html
 ├── package.json
 └── README.md
+````
+
+---
+
+## ▶️ Getting Started
+
+### Frontend Setup
+
+```bash
+npm install
+npm run dev
+```
+
+### Backend Setup
+
+```bash
+cd backend
+npm install
+node src/server.js
+```
+
+---
+
+## 🔐 Authentication (Current Status)
+
+* Dummy login and signup for prototype
+* Architecture designed for integration with **Microsoft Entra ID / Azure AD B2C**
+
+---
+
+## 🚀 Future Enhancements
+
+* Full Azure OpenAI integration
+* Persistent storage using Azure Cosmos DB
+* Real-time job vacancy integration
+* Mentor–learner matching
+* Advanced analytics dashboards
+* Regional language expansion
+* Government and policymaker insights portal
+
+---
+
+## 🏆 Imagine Cup Alignment
+
+* ✔ Strong social and national impact
+* ✔ AI-powered, problem-first solution
+* ✔ Microsoft ecosystem integration
+* ✔ Scalable and inclusive design
+* ✔ Clear vocational and employability focus
+
+---
+
+## 👤 Author
+
+**Hardik Gupta**
+Founder & Developer – MARGDARSHAK
+
+---
+
+> *“Bridging skill gaps, empowering learners, and building a future-ready workforce.”*
