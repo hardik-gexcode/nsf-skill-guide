@@ -1,7 +1,9 @@
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { toast } from "sonner";
 import { 
   TrendingUp, 
   DollarSign, 
@@ -12,117 +14,110 @@ import {
   ArrowDown,
   Briefcase,
   Target,
-  Zap
+  Zap,
+  Loader2
 } from "lucide-react";
+import { 
+  getMarketInsights, 
+  applyForJob, 
+  saveJob, 
+  startLearningModule,
+  type MarketInsightsResponse 
+} from "@/services/api";
 
 const MarketIntelligence = () => {
-  const marketTrends = [
-    {
-      skill: "Artificial Intelligence",
-      demand: 95,
-      growth: "+45%",
-      salary: "₹12-25L",
-      jobs: "15,000+",
-      trend: "up"
-    },
-    {
-      skill: "Cloud Computing",
-      demand: 88,
-      growth: "+38%",
-      salary: "₹8-20L", 
-      jobs: "22,000+",
-      trend: "up"
-    },
-    {
-      skill: "Digital Marketing",
-      demand: 82,
-      growth: "+25%",
-      salary: "₹4-12L",
-      jobs: "35,000+",
-      trend: "up"
-    },
-    {
-      skill: "Data Science",
-      demand: 90,
-      growth: "+42%",
-      salary: "₹10-22L",
-      jobs: "18,000+",
-      trend: "up"
-    },
-    {
-      skill: "Cybersecurity",
-      demand: 85,
-      growth: "+35%",
-      salary: "₹8-18L",
-      jobs: "12,000+",
-      trend: "up"
-    },
-    {
-      skill: "Product Management",
-      demand: 78,
-      growth: "+28%",
-      salary: "₹15-35L",
-      jobs: "8,000+",
-      trend: "up"
+  const [loading, setLoading] = useState(false);
+  const [applyingJobId, setApplyingJobId] = useState<string | null>(null);
+  const [savingJobId, setSavingJobId] = useState<string | null>(null);
+  const [marketData, setMarketData] = useState<MarketInsightsResponse['data'] | null>(null);
+
+  // Fetch market insights on mount
+  useEffect(() => {
+    const fetchMarketData = async () => {
+      setLoading(true);
+      try {
+        const response = await getMarketInsights();
+        if (response.success) {
+          setMarketData(response.data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch market insights:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchMarketData();
+  }, []);
+
+  // Handler: Apply for job
+  const handleApplyJob = async (jobId: string, jobTitle: string) => {
+    setApplyingJobId(jobId);
+    try {
+      const response = await applyForJob(jobId);
+      if (response.success) {
+        toast.success(`Application submitted for ${jobTitle}!`);
+      }
+    } catch (error) {
+      toast.error('Failed to submit application.');
+    } finally {
+      setApplyingJobId(null);
     }
+  };
+
+  // Handler: Save job
+  const handleSaveJob = async (jobId: string) => {
+    setSavingJobId(jobId);
+    try {
+      const response = await saveJob(jobId);
+      if (response.success) {
+        toast.success('Job saved to your list!');
+      }
+    } catch (error) {
+      toast.error('Failed to save job.');
+    } finally {
+      setSavingJobId(null);
+    }
+  };
+
+  // Handler: View learning path
+  const handleViewLearningPath = async (skill: string) => {
+    try {
+      const response = await startLearningModule(`skill_${skill.toLowerCase().replace(/\s+/g, '_')}`);
+      if (response.success) {
+        toast.success(`Opening learning path for ${skill}`);
+      }
+    } catch (error) {
+      toast.error('Failed to load learning path.');
+    }
+  };
+
+  // Handler: Explore industry
+  const handleExploreIndustry = async (industry: string) => {
+    toast.info(`Exploring ${industry} opportunities...`);
+    // In production, this would navigate to industry details page
+  };
+
+  // Use fetched data or defaults
+  const marketTrends = marketData?.trends || [
+    { skill: "Artificial Intelligence", demand: 95, growth: "+45%", salary: "₹12-25L", jobs: "15,000+", trend: "up" as const },
+    { skill: "Cloud Computing", demand: 88, growth: "+38%", salary: "₹8-20L", jobs: "22,000+", trend: "up" as const },
+    { skill: "Digital Marketing", demand: 82, growth: "+25%", salary: "₹4-12L", jobs: "35,000+", trend: "up" as const },
+    { skill: "Data Science", demand: 90, growth: "+42%", salary: "₹10-22L", jobs: "18,000+", trend: "up" as const },
+    { skill: "Cybersecurity", demand: 85, growth: "+35%", salary: "₹8-18L", jobs: "12,000+", trend: "up" as const },
+    { skill: "Product Management", demand: 78, growth: "+28%", salary: "₹15-35L", jobs: "8,000+", trend: "up" as const },
   ];
 
-  const jobAlerts = [
-    {
-      title: "Senior AI Engineer",
-      company: "TechCorp India",
-      location: "Bangalore",
-      salary: "₹18-25L",
-      posted: "2 hours ago",
-      match: 92
-    },
-    {
-      title: "Digital Marketing Manager",
-      company: "StartupXYZ",
-      location: "Mumbai",
-      salary: "₹8-12L",
-      posted: "4 hours ago",
-      match: 88
-    },
-    {
-      title: "Cloud Solutions Architect",
-      company: "GlobalTech",
-      location: "Hyderabad",
-      salary: "₹20-30L",
-      posted: "1 day ago",
-      match: 85
-    }
+  const jobAlerts = marketData?.jobs || [
+    { id: "job_1", title: "Senior AI Engineer", company: "TechCorp India", location: "Bangalore", salary: "₹18-25L", posted: "2 hours ago", match: 92 },
+    { id: "job_2", title: "Digital Marketing Manager", company: "StartupXYZ", location: "Mumbai", salary: "₹8-12L", posted: "4 hours ago", match: 88 },
+    { id: "job_3", title: "Cloud Solutions Architect", company: "GlobalTech", location: "Hyderabad", salary: "₹20-30L", posted: "1 day ago", match: 85 },
   ];
 
-  const industryInsights = [
-    {
-      industry: "Information Technology",
-      growth: "+25%",
-      jobs: "2.5M+",
-      avgSalary: "₹8-20L",
-      hotSkills: ["AI/ML", "Cloud", "DevOps"]
-    },
-    {
-      industry: "Healthcare",
-      growth: "+18%",
-      jobs: "1.8M+",
-      avgSalary: "₹5-15L",
-      hotSkills: ["Digital Health", "Telemedicine", "Biotechnology"]
-    },
-    {
-      industry: "Financial Services",
-      growth: "+22%",
-      jobs: "1.2M+",
-      avgSalary: "₹6-18L",
-      hotSkills: ["FinTech", "Blockchain", "Risk Analysis"]
-    },
-    {
-      industry: "Manufacturing",
-      growth: "+15%",
-      jobs: "3.2M+",
-      avgSalary: "₹4-12L",
-      hotSkills: ["Industry 4.0", "IoT", "Automation"]
-    }
+  const industryInsights = marketData?.industries || [
+    { industry: "Information Technology", growth: "+25%", jobs: "2.5M+", avgSalary: "₹8-20L", hotSkills: ["AI/ML", "Cloud", "DevOps"] },
+    { industry: "Healthcare", growth: "+18%", jobs: "1.8M+", avgSalary: "₹5-15L", hotSkills: ["Digital Health", "Telemedicine", "Biotechnology"] },
+    { industry: "Financial Services", growth: "+22%", jobs: "1.2M+", avgSalary: "₹6-18L", hotSkills: ["FinTech", "Blockchain", "Risk Analysis"] },
+    { industry: "Manufacturing", growth: "+15%", jobs: "3.2M+", avgSalary: "₹4-12L", hotSkills: ["Industry 4.0", "IoT", "Automation"] },
   ];
 
   return (
@@ -187,7 +182,11 @@ const MarketIntelligence = () => {
                         <Badge variant="success">High Demand</Badge>
                       </div>
 
-                      <Button variant="outline" className="w-full">
+                      <Button 
+                        variant="outline" 
+                        className="w-full"
+                        onClick={() => handleViewLearningPath(trend.skill)}
+                      >
                         View Learning Path
                       </Button>
                     </CardContent>
@@ -225,8 +224,22 @@ const MarketIntelligence = () => {
                         </div>
                       </div>
                       <div className="flex space-x-2">
-                        <Button variant="outline" size="sm">Save</Button>
-                        <Button variant="hero" size="sm">Apply</Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => handleSaveJob(job.id)}
+                          disabled={savingJobId === job.id}
+                        >
+                          {savingJobId === job.id ? 'Saving...' : 'Save'}
+                        </Button>
+                        <Button 
+                          variant="hero" 
+                          size="sm"
+                          onClick={() => handleApplyJob(job.id, job.title)}
+                          disabled={applyingJobId === job.id}
+                        >
+                          {applyingJobId === job.id ? 'Applying...' : 'Apply'}
+                        </Button>
                       </div>
                     </div>
                   </CardContent>
@@ -273,7 +286,11 @@ const MarketIntelligence = () => {
                       </div>
                     </div>
 
-                    <Button variant="outline" className="w-full">
+                    <Button 
+                      variant="outline" 
+                      className="w-full"
+                      onClick={() => handleExploreIndustry(industry.industry)}
+                    >
                       Explore {industry.industry}
                     </Button>
                   </CardContent>

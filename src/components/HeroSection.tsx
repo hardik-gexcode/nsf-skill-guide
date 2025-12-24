@@ -12,6 +12,7 @@ import {
   BookOpen,
   Zap
 } from "lucide-react";
+import { initializeUserJourney } from "@/services/api";
 
 const HeroSection = () => {
   const navigate = useNavigate();
@@ -49,7 +50,11 @@ const HeroSection = () => {
                 variant="hero" 
                 size="lg" 
                 className="group"
-                onClick={() => navigate("/auth")}
+                onClick={async () => {
+                  // Initialize journey in backend before navigating
+                  await initializeUserJourney();
+                  navigate("/auth");
+                }}
               >
                 Start Your Journey
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
