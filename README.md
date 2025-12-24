@@ -1,73 +1,103 @@
-# Welcome to my Margdarshak project
+# 🚀 MARGDARSHAK
 
-## Project info
+**AI-powered personalized vocational and career guidance platform**  
+Aligned with **NCVET**, **NSQF**, and **real-time labour market intelligence**.
 
-**URL**: https://lovable.dev/projects/cc532d0b-d8da-4547-b075-e6acdf1a59b1
+MARGDARSHAK helps learners at every stage — beginners, mid-career professionals, and working experts — discover the right skill pathways, stay relevant in the job market, and build future-ready careers using AI.
 
-## How can I edit this code?
+---
 
-There are several ways of editing your application.
+## 🌍 Problem Statement
 
-**Use Lovable**
+India’s skilling ecosystem offers numerous vocational and training programs, but learners often struggle to:
+- Choose the right career path
+- Understand industry-relevant skills
+- Align learning with real job opportunities
+- Keep up with rapidly changing market demands
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/cc532d0b-d8da-4547-b075-e6acdf1a59b1) and start prompting.
+This leads to **skill mismatches**, **unemployment**, and **underutilized training opportunities**.
 
-Changes made via Lovable will be committed automatically to this repo.
+---
 
-**Use your preferred IDE**
+## 💡 Our Solution
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+MARGDARSHAK is an **AI-powered career navigator** that:
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+- Analyzes learner profiles (education, skills, interests, goals)
+- Maps users to **NSQF-aligned vocational pathways**
+- Recommends **government-backed courses** (NCVET, SWAYAM, NPTEL)
+- Tracks progress and skill gaps
+- Provides real-time labour market insights
+- Supports multilingual access (English & Hindi)
 
-Follow these steps:
+---
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## 👥 User Types Supported
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+### 1️⃣ Beginners
+- Interest discovery surveys
+- Career exploration paths
+- Foundational skill guidance
 
-# Step 3: Install the necessary dependencies.
-npm i
+### 2️⃣ Mid-Level Learners
+- Skill enhancement recommendations
+- Career transition planning
+- Certifications and upskilling
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+### 3️⃣ Working Professionals
+- Market trend analysis
+- Advanced skill recommendations
+- Continuous learning to avoid skill obsolescence
 
-**Edit a file directly in GitHub**
+---
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## 🧠 Key Features
 
-**Use GitHub Codespaces**
+- 🔍 AI-based learner profiling
+- 🧭 Personalized career roadmaps
+- 📊 Labour market analytics (demand, salary, trends)
+- 🎓 NSQF & NCVET-aligned vocational courses
+- 🤖 Integrated AI chatbot for guidance
+- 🧪 **Agni Lab** – experimental tools & challenges
+- 🔥 **Agni Flame Meter** – daily/weekly skill challenges
+- 🏅 Gamified progress, badges & streaks
+- 🌐 Scalable architecture (millions of users)
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+---
 
-## What technologies are used for this project?
+## 🛠️ Tech Stack (Imagine Cup Aligned)
 
-This project is built with:
-
+### Frontend
+- React + TypeScript
 - Vite
-- TypeScript
-- React
-- shadcn-ui
 - Tailwind CSS
+- ShadCN UI
 
-## How can I deploy this project?
+### Backend
+- Node.js
+- Express.js
 
-Simply open [Lovable](https://lovable.dev/projects/cc532d0b-d8da-4547-b075-e6acdf1a59b1) and click on Share -> Publish.
+### AI & Cloud (Planned / Mocked)
+- Microsoft Azure OpenAI
+- Azure Cosmos DB
+- Azure App Service
+- Microsoft Entra ID (Azure AD B2C)
 
-## Can I connect a custom domain to my Lovable project?
+---
 
-Yes, you can!
+## 📁 Project Structure
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+```txt
+nsf-skill-guide/
+├── public/
+│   └── favicon.png
+├── src/
+│   ├── components/
+│   ├── pages/
+│   ├── routes/
+│   └── main.tsx
+├── backend/
+│   └── src/server.js
+├── index.html
+├── package.json
+└── README.md
