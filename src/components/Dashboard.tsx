@@ -1,8 +1,10 @@
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { toast } from "sonner";
 import { 
   User, 
   TrendingUp, 
@@ -15,17 +17,108 @@ import {
   Brain,
   MessageCircle,
   Calendar,
-  Users
+  Users,
+  Loader2
 } from "lucide-react";
+import { 
+  getUserProgress, 
+  getPersonalizedRecommendations, 
+  getAIGuidance,
+  startLearningModule,
+  type UserProgressResponse,
+  type AIGuidanceResponse 
+} from "@/services/api";
 
 const Dashboard = () => {
+  const [loading, setLoading] = useState(false);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiResponse, setAiResponse] = useState<AIGuidanceResponse | null>(null);
+  const [userProgress, setUserProgress] = useState<UserProgressResponse['data'] | null>(null);
+
+  // Fetch user progress on mount
+  useEffect(() => {
+    const fetchProgress = async () => {
+      try {
+        const response = await getUserProgress();
+        if (response.success) {
+          setUserProgress(response.data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch user progress:', error);
+      }
+    };
+    fetchProgress();
+  }, []);
+
+  // Handler: AI Chatbot button
+  const handleAIChatbot = async () => {
+    setAiLoading(true);
+    try {
+      const response = await getAIGuidance('career guidance', {
+        skills: userProgress?.skills.map(s => s.skill) || [],
+        goals: ['career advancement', 'skill development'],
+      });
+      setAiResponse(response);
+      toast.success('AI guidance generated successfully!');
+    } catch (error) {
+      toast.error('Failed to get AI guidance. Please try again.');
+    } finally {
+      setAiLoading(false);
+    }
+  };
+
+  // Handler: Get Personalized Recommendations
+  const handleGetRecommendations = async () => {
+    setLoading(true);
+    try {
+      const response = await getPersonalizedRecommendations();
+      if (response.success) {
+        setAiResponse(response);
+        toast.success('Personalized recommendations loaded!');
+      }
+    } catch (error) {
+      toast.error('Failed to fetch recommendations.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handler: Continue Learning
+  const handleContinueLearning = async (courseId: string, courseTitle: string) => {
+    try {
+      const response = await startLearningModule(courseId);
+      if (response.success) {
+        toast.success(`Resuming: ${courseTitle}`);
+        // In production, navigate to response.sessionUrl
+      }
+    } catch (error) {
+      toast.error('Failed to start learning module.');
+    }
+  };
+
+  // Handler: Start Recommended Path
+  const handleStartRecommendedPath = async () => {
+    setLoading(true);
+    try {
+      const response = await startLearningModule('recommended-path');
+      if (response.success) {
+        toast.success('Starting your personalized learning path!');
+      }
+    } catch (error) {
+      toast.error('Failed to start learning path.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Use fetched data or fallback to defaults
   const userStats = {
-    completedCourses: 12,
-    currentCourses: 4,
-    totalCredits: 2450,
-    streakDays: 15,
-    skillBadges: 8,
-    mentorSessions: 3
+    completedCourses: userProgress?.completedCourses || 12,
+    currentCourses: userProgress?.currentCourses || 4,
+    totalCredits: userProgress?.totalCredits || 2450,
+    streakDays: userProgress?.streakDays || 15,
+    skillBadges: userProgress?.skillBadges || 8,
+    mentorSessions: userProgress?.mentorSessions || 3
   };
 
   const currentCourses = [
@@ -106,12 +199,20 @@ const Dashboard = () => {
               <p className="text-muted-foreground">Continue your learning journey and achieve your goals.</p>
             </div>
             <div className="flex items-center space-x-4">
-              <Button variant="outline">
-                <MessageCircle className="h-4 w-4 mr-2" />
+              <Button variant="outline" onClick={handleAIChatbot} disabled={aiLoading}>
+                {aiLoading ? (
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                ) : (
+                  <MessageCircle className="h-4 w-4 mr-2" />
+                )}
                 AI Chatbot (50 credits)
               </Button>
-              <Button variant="hero">
-                <Brain className="h-4 w-4 mr-2" />
+              <Button variant="hero" onClick={handleGetRecommendations} disabled={loading}>
+                {loading ? (
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                ) : (
+                  <Brain className="h-4 w-4 mr-2" />
+                )}
                 Get Personalized Recommendations
               </Button>
             </div>
@@ -200,7 +301,11 @@ const Dashboard = () => {
                       </div>
                     </div>
 
-                    <Button variant="outline" className="w-full">
+                    <Button 
+                      variant="outline" 
+                      className="w-full"
+                      onClick={() => handleContinueLearning(`course_${index}`, course.title)}
+                    >
                       Continue Learning
                     </Button>
                   </CardContent>
@@ -248,8 +353,8 @@ const Dashboard = () => {
                       <Badge variant="outline">Low Priority</Badge>
                     </div>
                   </div>
-                  <Button variant="hero" className="w-full mt-4">
-                    Start Recommended Path
+                  <Button variant="hero" className="w-full mt-4" onClick={handleStartRecommendedPath} disabled={loading}>
+                    {loading ? 'Starting...' : 'Start Recommended Path'}
                   </Button>
                 </Card>
 

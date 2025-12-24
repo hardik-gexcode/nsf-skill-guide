@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { toast } from "sonner";
 import { 
   Flame, 
   Zap, 
@@ -14,10 +16,78 @@ import {
   Star,
   Rocket,
   Brain,
-  Target
+  Target,
+  Loader2
 } from "lucide-react";
+import { joinChallenge, startLearningModule } from "@/services/api";
 
 const AgniLab = () => {
+  const [joiningChallengeId, setJoiningChallengeId] = useState<string | null>(null);
+  const [launchingTool, setLaunchingTool] = useState<string | null>(null);
+  const [startingChallenge, setStartingChallenge] = useState<string | null>(null);
+
+  // Handler: Join challenge
+  const handleJoinChallenge = async (challengeId: string, challengeTitle: string) => {
+    setJoiningChallengeId(challengeId);
+    try {
+      const response = await joinChallenge(challengeId);
+      if (response.success) {
+        toast.success(`Joined: ${challengeTitle}! ${response.message}`);
+      }
+    } catch (error) {
+      toast.error('Failed to join challenge.');
+    } finally {
+      setJoiningChallengeId(null);
+    }
+  };
+
+  // Handler: Launch mini tool
+  const handleLaunchTool = async (toolName: string) => {
+    setLaunchingTool(toolName);
+    try {
+      const response = await startLearningModule(`tool_${toolName.toLowerCase().replace(/\s+/g, '_')}`);
+      if (response.success) {
+        toast.success(`Launching ${toolName}...`);
+        // In production, navigate to response.sessionUrl
+      }
+    } catch (error) {
+      toast.error('Failed to launch tool.');
+    } finally {
+      setLaunchingTool(null);
+    }
+  };
+
+  // Handler: Start interactive challenge
+  const handleStartInteractiveChallenge = async (challengeId: string, challengeTitle: string) => {
+    setStartingChallenge(challengeId);
+    try {
+      const response = await startLearningModule(`interactive_${challengeId}`);
+      if (response.success) {
+        toast.success(`Starting: ${challengeTitle}`);
+      }
+    } catch (error) {
+      toast.error('Failed to start challenge.');
+    } finally {
+      setStartingChallenge(null);
+    }
+  };
+
+  // Handler: Boost score
+  const handleBoostScore = () => {
+    toast.info('Complete more challenges to boost your Agni Flame score!');
+  };
+
+  // Handler: Read more news
+  const handleReadMore = (title: string) => {
+    toast.info(`Opening article: ${title}`);
+    // In production, navigate to article page
+  };
+
+  // Handler: Load more news
+  const handleLoadMoreNews = () => {
+    toast.info('Loading more knowledge bytes...');
+  };
+
   const techSparks = [
     {
       title: "AI Innovation Challenge",
@@ -209,9 +279,18 @@ const AgniLab = () => {
                       </div>
                     </div>
 
-                    <Button className="w-full group-hover:scale-105 transition-transform" variant="hero">
-                      <Flame className="h-4 w-4 mr-2" />
-                      Join Challenge
+                    <Button 
+                      className="w-full group-hover:scale-105 transition-transform" 
+                      variant="hero"
+                      onClick={() => handleJoinChallenge(`challenge_${index}`, challenge.title)}
+                      disabled={joiningChallengeId === `challenge_${index}`}
+                    >
+                      {joiningChallengeId === `challenge_${index}` ? (
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      ) : (
+                        <Flame className="h-4 w-4 mr-2" />
+                      )}
+                      {joiningChallengeId === `challenge_${index}` ? 'Joining...' : 'Join Challenge'}
                     </Button>
                   </CardContent>
                 </Card>
@@ -228,7 +307,7 @@ const AgniLab = () => {
                     <div className="font-bold text-lg">Agni Flame Meter</div>
                     <div className="text-white/90">Your Innovation Score: 875/1000</div>
                   </div>
-                  <Button variant="secondary" size="sm">
+                  <Button variant="secondary" size="sm" onClick={handleBoostScore}>
                     Boost Score
                   </Button>
                 </div>
@@ -258,9 +337,18 @@ const AgniLab = () => {
                     <p className="text-muted-foreground text-sm">{tool.description}</p>
                   </CardHeader>
                   <CardContent>
-                    <Button variant="outline" className="w-full">
-                      <Zap className="h-4 w-4 mr-2" />
-                      Launch Tool
+                    <Button 
+                      variant="outline" 
+                      className="w-full"
+                      onClick={() => handleLaunchTool(tool.name)}
+                      disabled={launchingTool === tool.name}
+                    >
+                      {launchingTool === tool.name ? (
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      ) : (
+                        <Zap className="h-4 w-4 mr-2" />
+                      )}
+                      {launchingTool === tool.name ? 'Launching...' : 'Launch Tool'}
                     </Button>
                   </CardContent>
                 </Card>
@@ -300,7 +388,7 @@ const AgniLab = () => {
                           </div>
                         </div>
                       </div>
-                      <Button variant="ghost" size="sm">
+                      <Button variant="ghost" size="sm" onClick={() => handleReadMore(byte.title)}>
                         Read More
                       </Button>
                     </div>
@@ -310,7 +398,7 @@ const AgniLab = () => {
             </div>
 
             <div className="text-center">
-              <Button variant="outline">Load More News</Button>
+              <Button variant="outline" onClick={handleLoadMoreNews}>Load More News</Button>
             </div>
           </TabsContent>
 
@@ -348,9 +436,18 @@ const AgniLab = () => {
                       </div>
                     </div>
 
-                    <Button className="w-full" variant="hero">
-                      <Brain className="h-4 w-4 mr-2" />
-                      Start Challenge
+                    <Button 
+                      className="w-full" 
+                      variant="hero"
+                      onClick={() => handleStartInteractiveChallenge(`bite_${index}`, bite.title)}
+                      disabled={startingChallenge === `bite_${index}`}
+                    >
+                      {startingChallenge === `bite_${index}` ? (
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      ) : (
+                        <Brain className="h-4 w-4 mr-2" />
+                      )}
+                      {startingChallenge === `bite_${index}` ? 'Starting...' : 'Start Challenge'}
                     </Button>
                   </CardContent>
                 </Card>
